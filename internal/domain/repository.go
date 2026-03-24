@@ -1,8 +1,11 @@
 package domain
 
 /*
-Defines three interfaces: NotificationRepository (Save, FindByID, UpdateStatus), DeliveryLogRepository (Insert, UpdateStatus, ExistsSent), UserRepository (FindByID, FindPreferences).
-Why needed: the worker and handler depend on these interfaces, not on *pgxpool.Pool. This means you can pass a mock in tests without a real database running.
+Defines three interfaces: NotificationRepository (Save, FindByID, UpdateStatus),
+DeliveryLogRepository (Insert, UpdateStatus, ExistsSent),
+UserRepository (FindByID, FindPreferences).
+Why needed: the worker and handler depend on these interfaces, not on *pgxpool.Pool.
+This means you can pass a mock in tests without a real database running.
 */
 
 import "context"
