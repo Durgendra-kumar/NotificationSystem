@@ -13,12 +13,12 @@ import (
 
 	"log/slog"
 
+	"github.com/Durgendra-kumar/NotificationSystem/internal/domain"
+	"github.com/Durgendra-kumar/NotificationSystem/internal/kafka"
+	"github.com/Durgendra-kumar/NotificationSystem/internal/ratelimit"
+	"github.com/Durgendra-kumar/NotificationSystem/internal/store"
+	"github.com/Durgendra-kumar/NotificationSystem/pkg/metrics"
 	"github.com/google/uuid"
-	"github.com/yourname/notification-platform/internal/domain"
-	"github.com/yourname/notification-platform/internal/kafka"
-	"github.com/yourname/notification-platform/internal/ratelimit"
-	"github.com/yourname/notification-platform/internal/store"
-	"github.com/yourname/notification-platform/pkg/metrics"
 )
 
 // Handler holds all dependencies for HTTP handlers.
