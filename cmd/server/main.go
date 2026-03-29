@@ -1,4 +1,4 @@
-package server
+package main
 
 /*
 Starts the HTTP API server on port 8080. Connects to Postgres, Redis, Kafka.

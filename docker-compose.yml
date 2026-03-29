@@ -27,6 +27,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    
 
   postgres:
     image: postgres:16-alpine
@@ -64,7 +65,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./deployments/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./deployment/prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
       - api
 
@@ -83,7 +84,10 @@ services:
   api:
     build:
       context: .
-      dockerfile: deployments/Dockerfile.api
+      dockerfile: cmd/server/Dockerfile.api
+      platforms:
+        - linux/arm64        # ← add this line
+    platform: linux/arm64
     container_name: notif-api
     ports:
       - "8080:8080"
@@ -103,7 +107,10 @@ services:
   worker:
     build:
       context: .
-      dockerfile: deployments/Dockerfile.worker
+      dockerfile: cmd/worker/Dockerfile.worker
+      platforms:
+        - linux/arm64        # add this line
+    platform: linux/arm64
     container_name: notif-worker
     environment:
       KAFKA_BROKER: kafka:9092

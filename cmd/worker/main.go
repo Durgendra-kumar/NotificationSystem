@@ -1,4 +1,4 @@
-package worker
+package main
 
 /*
 Starts 4 worker goroutines — one per channel (iOS, Android, SMS, Email).

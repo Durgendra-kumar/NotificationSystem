@@ -68,14 +68,14 @@ func Load() (*Config, error) {
 			// Each channel gets its own partition within "notifications".
 			// Partition number is the routing key.
 			Routing: map[string]ChannelRouting{
-				"ios":     {Topic: "notifications", Partition: 0, GroupID: "worker-ios"},
-				"android": {Topic: "notifications", Partition: 1, GroupID: "worker-android"},
-				"sms":     {Topic: "notifications", Partition: 2, GroupID: "worker-sms"},
-				"email":   {Topic: "notifications", Partition: 3, GroupID: "worker-email"},
+				"ios":     {Topic: "notifications", GroupID: "worker-ios"},
+				"android": {Topic: "notifications", GroupID: "worker-android"},
+				"sms":     {Topic: "notifications", GroupID: "worker-sms"},
+				"email":   {Topic: "notifications", GroupID: "worker-email"},
 			},
 		},
 		Postgres: PostgresConfig{
-			DSN:             getEnvRequired("POSTGRES_DSN"),
+			DSN:             getEnv("POSTGRES_DSN", "postgres://notif:notif@localhost:5432/notifications"),
 			MaxOpenConns:    getInt("POSTGRES_MAX_OPEN_CONNS", 25),
 			MaxIdleConns:    getInt("POSTGRES_MAX_IDLE_CONNS", 5),
 			ConnMaxLifetime: getDuration("POSTGRES_CONN_MAX_LIFETIME", 5*time.Minute),

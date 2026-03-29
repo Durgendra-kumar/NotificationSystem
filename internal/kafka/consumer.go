@@ -30,7 +30,6 @@ func NewConsumer(cfg config.KafkaConfig, channel domain.Channel) (*Consumer, err
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:        []string{cfg.BrokerAddr},
 		Topic:          route.Topic,
-		Partition:      route.Partition,
 		GroupID:        route.GroupID,
 		MinBytes:       1,                // fetch as soon as any message is available
 		MaxBytes:       1 << 20,          // 1 MB max per fetch

@@ -1,15 +1,16 @@
 #  Stage 1: Build 
-FROM golang:1.22-alpine AS builder
+FROM golang:1.26-alpine AS builder
 
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o /bin/worker ./cmd/worker
-
+RUN CGO_ENABLED=0 GOOS=linux \
+    go build -o /bin/worker ./cmd/worker && \
+    chmod +x /bin/worker
 #  Stage 2: Run 
-FROM scratch
+FROM alpine:latest
 
 COPY --from=builder /bin/worker /worker
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
