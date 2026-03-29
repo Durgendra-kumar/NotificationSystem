@@ -57,7 +57,7 @@ internal/
   domain/             — core structs (Notification, User, DeliveryLog) and interfaces
   api/                — HTTP handlers, middleware, router
   kafka/              — producer and consumer wrappers
-  worker/             — worker loop: idempotency → persist → send → update
+  worker/             — worker loop: idempotency -> persist -> send -> update
   sender/             — one file per channel (APNs, FCM, Twilio, SendGrid)
   store/              — PostgreSQL implementation of all repository interfaces
   ratelimit/          — Redis sliding window rate limiter

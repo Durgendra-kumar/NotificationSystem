@@ -32,7 +32,7 @@ const (
 )
 
 // Notification is the single struct that flows through the entire system.
-// API receives it → publishes to Kafka → worker reads it → sender delivers it.
+// API receives it -> publishes to Kafka -> worker reads it -> sender delivers it.
 type Notification struct {
 	ID          string            `json:"id"`
 	UserID      string            `json:"user_id"`

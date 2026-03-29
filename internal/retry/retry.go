@@ -8,7 +8,7 @@ Why needed: third-party APIs (APNs, Twilio) fail transiently — network blip, b
  Without retry, one bad second causes permanent failures. With retry, transient errors self-heal.
 */
 /*
-Read the Do() function. Trace through: attempt 1 fails → wait 100ms → attempt 2 fails → wait 200ms → attempt 3 fails → return error. Then retype it.
+Read the Do() function. Trace through: attempt 1 fails -> wait 100ms -> attempt 2 fails -> wait 200ms -> attempt 3 fails -> return error. Then retype it.
 Goal: these files have zero dependencies on the rest of the project. Perfect starting point for writing code.
 */
 

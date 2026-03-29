@@ -126,14 +126,14 @@ func (w *Worker) process(ctx context.Context, n *domain.Notification) error {
 	// Step 4: Update delivery log with final status
 	if retryErr != nil {
 		errMsg := retryErr.Error()
-		if updateErr := w.logRepo.UpdateStatus(ctx, logID, domain.StatusFailed, errMsg); updateErr != nil {
+		if updateErr := w.logRepo.UpdateDeliveryStatus(ctx, logID, domain.StatusFailed, errMsg); updateErr != nil {
 			log.Error("failed to update delivery log to failed", "error", updateErr)
 		}
 		metrics.NotificationsFailedTotal.WithLabelValues(string(w.sender.Channel())).Inc()
 		return fmt.Errorf("send failed after retries: %w", retryErr)
 	}
 
-	if updateErr := w.logRepo.UpdateStatus(ctx, logID, domain.StatusSent, ""); updateErr != nil {
+	if updateErr := w.logRepo.UpdateDeliveryStatus(ctx, logID, domain.StatusSent, ""); updateErr != nil {
 		// Non-fatal: the notification was delivered. Log the failure but don't
 		// return an error — returning an error would cause Kafka to redeliver.
 		log.Error("notification sent but failed to update delivery log", "error", updateErr)

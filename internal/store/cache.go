@@ -18,11 +18,11 @@ import (
 )
 
 // UserCache sits in front of the UserRepository.
-// Cache-aside pattern: check Redis → on miss, hit Postgres and populate cache.
+// Cache-aside pattern: check Redis -> on miss, hit Postgres and populate cache.
 //
 // This is the key optimisation your design described:
-//   - Without cache: every POST /notify hits Postgres for user data → DB bottleneck
-//   - With cache:    ~95% of requests hit Redis (sub-ms) → DB only sees cache misses
+//   - Without cache: every POST /notify hits Postgres for user data -> DB bottleneck
+//   - With cache:    ~95% of requests hit Redis (sub-ms) -> DB only sees cache misses
 type UserCache struct {
 	rdb   *redis.Client
 	store *Store

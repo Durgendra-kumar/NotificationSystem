@@ -59,7 +59,7 @@ func (p *Producer) Publish(ctx context.Context, n *domain.Notification) error {
 	msg := kafka.Message{
 		Topic:     route.Topic,
 		Partition: route.Partition,
-		Key:       []byte(n.UserID), // same user → same partition → ordered delivery
+		Key:       []byte(n.UserID), // same user -> same partition -> ordered delivery
 		Value:     data,
 		Time:      time.Now(),
 		Headers: []kafka.Header{

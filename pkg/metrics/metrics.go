@@ -15,34 +15,69 @@ import (
 )
 
 var (
-	// NotificationsSentTotal counts successful deliveries by channel.
+	// ── API layer
+
+	// counts every HTTP request hitting your server
+	// labels: method (POST/GET), path (/api/v1/notify), status (200/202/429/500)
+	HTTPRequestsTotal = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "http_requests_total",
+		Help: "Total number of HTTP requests received.",
+	}, []string{"method", "path", "status"})
+
+	// measures how long each HTTP request takes
+	// labels: method, path
+	HTTPRequestDuration = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:    "http_request_duration_seconds",
+		Help:    "HTTP request latency.",
+		Buckets: prometheus.DefBuckets,
+	}, []string{"method", "path"})
+
+	// counts requests currently being processed right now
+	// goes up when request arrives, down when response sent
+	HTTPRequestsInFlight = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "http_requests_in_flight",
+		Help: "Number of HTTP requests currently being processed.",
+	})
+
+	//  Notification pipeline
+
 	NotificationsSentTotal = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: "notifications_sent_total",
-		Help: "Total number of notifications successfully sent.",
+		Help: "Total notifications successfully delivered.",
 	}, []string{"channel"})
 
-	// NotificationsFailedTotal counts failed delivery attempts by channel.
 	NotificationsFailedTotal = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: "notifications_failed_total",
-		Help: "Total number of notification delivery failures.",
+		Help: "Total notification delivery failures.",
 	}, []string{"channel"})
 
-	// NotificationsSkippedTotal counts skipped notifications (opted out, rate limited).
 	NotificationsSkippedTotal = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: "notifications_skipped_total",
-		Help: "Total number of notifications skipped (user opted out or rate limited).",
+		Help: "Notifications skipped (rate limited or opted out).",
 	}, []string{"channel", "reason"})
 
-	// DeliveryDuration measures end-to-end delivery latency per channel.
 	DeliveryDuration = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:    "notification_delivery_duration_seconds",
-		Help:    "End-to-end delivery latency from worker receive to provider ack.",
+		Help:    "End-to-end delivery latency.",
 		Buckets: prometheus.DefBuckets,
 	}, []string{"channel"})
 
-	// KafkaPublishTotal counts Kafka publish attempts from the API server.
 	KafkaPublishTotal = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: "kafka_publish_total",
-		Help: "Total Kafka publish attempts from the API server.",
+		Help: "Total Kafka publish attempts.",
 	}, []string{"channel", "status"})
+
+	//  Infrastructure
+
+	// how far behind is your worker from the latest Kafka message
+	KafkaConsumerLag = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "kafka_consumer_lag",
+		Help: "Number of messages worker is behind in Kafka partition.",
+	}, []string{"partition"})
+
+	// number of active worker goroutines right now
+	ActiveWorkers = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "active_workers",
+		Help: "Number of worker goroutines currently running.",
+	})
 )

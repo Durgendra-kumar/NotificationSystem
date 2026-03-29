@@ -15,8 +15,10 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"time"
 
+	"github.com/Durgendra-kumar/NotificationSystem/pkg/metrics"
 	"github.com/google/uuid"
 )
 
@@ -42,13 +44,31 @@ func RequestID(next http.Handler) http.Handler {
 
 // Logger logs every request: method, path, status, duration.
 // Uses a responseWriter wrapper to capture the status code.
+// middleware.go — updated Logger middleware
 func Logger(logger *slog.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			start := time.Now()
 			rw := &responseWriter{ResponseWriter: w, status: http.StatusOK}
 
+			// count request in flight
+			metrics.HTTPRequestsInFlight.Inc()
+			defer metrics.HTTPRequestsInFlight.Dec()
+
 			next.ServeHTTP(rw, r)
+
+			duration := time.Since(start).Seconds()
+			status := strconv.Itoa(rw.status)
+
+			// count every request with method + path + status
+			metrics.HTTPRequestsTotal.
+				WithLabelValues(r.Method, r.URL.Path, status).
+				Inc()
+
+			// record how long it took
+			metrics.HTTPRequestDuration.
+				WithLabelValues(r.Method, r.URL.Path).
+				Observe(duration)
 
 			logger.Info("request",
 				"method", r.Method,

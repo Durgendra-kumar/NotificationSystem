@@ -244,7 +244,7 @@ func (h *Handler) HealthCheck(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+//  Helpers
 
 func isChannelEnabled(channel domain.Channel, prefs *domain.UserPreferences) bool {
 	switch channel {

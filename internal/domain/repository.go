@@ -33,7 +33,7 @@ type DeliveryLogRepository interface {
 	Insert(ctx context.Context, log *DeliveryLog) error
 
 	// UpdateStatus updates a delivery log after the send attempt resolves.
-	UpdateStatus(ctx context.Context, id string, status Status, errMsg string) error
+	UpdateDeliveryStatus(ctx context.Context, id string, status Status, errMsg string) error
 
 	// ExistsSent checks if a notification was already successfully delivered.
 	// Used for idempotency — Kafka at-least-once means we may see the same
